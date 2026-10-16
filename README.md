@@ -52,6 +52,14 @@ pnpm build        # production build in dist/
 pnpm preview      # serve the production build
 ```
 
+### Sound lab
+
+Try out the cue sounds at `pnpm sound-lab`, or on your phone at
+https://vajkri.github.io/interval-timer/tools/sound-lab/. Each cue has 5 options, and
+**Play sequence** plays your picks in workout order. Sounds are defined in
+`tools/sound-lab/options.ts` and use the same synth as the app
+(`src/services/audio/synth.ts`), so what you hear is exactly what the app plays.
+
 To test on your phone during development, run `pnpm dev --host` and open the network URL.
 Wake Lock and installing need HTTPS, so use the deployed site to test those.
 

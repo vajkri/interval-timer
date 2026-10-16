@@ -43,6 +43,15 @@ export default defineConfig({
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
+  build: {
+    rollupOptions: {
+      input: {
+        app: fileURLToPath(new URL('./index.html', import.meta.url)),
+        // Developer tool for auditioning cue sounds; not part of the app or its offline cache.
+        soundLab: fileURLToPath(new URL('./tools/sound-lab/index.html', import.meta.url)),
+      },
+    },
+  },
   plugins: [
     react(),
     contentSecurityPolicy(),
@@ -69,6 +78,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,webmanifest}'],
+        globIgnores: ['tools/**'],
+        navigateFallbackDenylist: [/\/tools\//],
         cleanupOutdatedCaches: true,
       },
     }),

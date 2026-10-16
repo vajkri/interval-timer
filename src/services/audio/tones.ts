@@ -1,22 +1,5 @@
 import type { Cue } from '@/domain/timer'
-
-/** A single synthesized note, relative to the start of the cue. */
-export interface Tone {
-  readonly frequency: number
-  readonly startSec: number
-  readonly durationSec: number
-  readonly type: OscillatorType
-  /** Peak gain, 0 → 1. */
-  readonly gain: number
-}
-
-const note = (
-  frequency: number,
-  startSec: number,
-  durationSec: number,
-  type: OscillatorType = 'sine',
-  gain = 0.6,
-): Tone => ({ frequency, startSec, durationSec, type, gain })
+import { note, type Tone } from './synth'
 
 /**
  * Each cue has a clearly different sound so it can be recognised without
