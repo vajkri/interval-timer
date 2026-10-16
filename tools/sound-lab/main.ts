@@ -1,5 +1,12 @@
 import type { Cue } from '@/domain/timer'
-import { APP_SOUNDS, SOUND_LIBRARY, scheduleTones, type SoundOption } from '@/services/audio'
+import {
+  DEFAULT_SOUND_SET,
+  SOUND_LIBRARY,
+  SOUND_SETS,
+  getSoundSet,
+  scheduleTones,
+  type SoundOption,
+} from '@/services/audio'
 
 const CUES: readonly { cue: Cue; label: string; hint: string }[] = [
   { cue: 'countdown', label: 'Countdown', hint: 'Plays at 3, 2 and 1 seconds before every change' },
@@ -56,9 +63,9 @@ volume.addEventListener('input', () => {
 
 type Picks = Record<Cue, string>
 
-/** Picks start from what the app plays today. */
+/** Picks start from the app's default sound set. */
 function defaultPicks(): Picks {
-  return { ...APP_SOUNDS }
+  return { ...getSoundSet(DEFAULT_SOUND_SET).sounds }
 }
 
 function loadPicks(): Picks {
@@ -121,10 +128,10 @@ function render() {
       const desc = document.createElement('span')
       desc.className = 'desc'
       desc.textContent = option.description
-      if (APP_SOUNDS[cue] === option.id) {
+      for (const set of SOUND_SETS.filter((s) => s.sounds[cue] === option.id)) {
         const badge = document.createElement('span')
         badge.className = 'badge'
-        badge.textContent = 'In app'
+        badge.textContent = set.name
         name.append(' ', badge)
       }
       button.append(num, name, desc)
@@ -161,7 +168,26 @@ function playSequence() {
   for (const [cue, at] of steps) play(picked(cue), at)
 }
 
+/** Buttons that load an app sound set into the picks. */
+function renderSetButtons() {
+  const toolbar = $('.toolbar')
+  for (const set of SOUND_SETS) {
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.className = 'set-button'
+    button.textContent = `Load ${set.name}`
+    button.addEventListener('click', () => {
+      Object.assign(picks, set.sounds)
+      syncSelection()
+      renderChoice()
+      playSequence()
+    })
+    toolbar.append(button)
+  }
+}
+
 render()
+renderSetButtons()
 syncSelection()
 renderChoice()
 

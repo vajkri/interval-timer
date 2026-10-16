@@ -70,7 +70,7 @@ add a migration when reading.
 
 ## Audio
 
-Cues are synthesized with oscillators: `services/audio/synth.ts` is the engine, `sounds.ts` is the catalog of sounds and `tones.ts` (`APP_SOUNDS`) picks one per cue, so there are no audio
+Cues are synthesized with oscillators: `services/audio/synth.ts` is the engine, `sounds.ts` is the catalog of sounds and `soundSets.ts` defines the selectable sets (Bells, Beeps), each picking one sound per cue, so there are no audio
 files to load and changing a sound is a one-line edit. The `AudioContext` is unlocked inside
 the Start tap (iOS needs a user gesture). It runs under the `ambient` audio session, so it
 mixes with music.
@@ -81,8 +81,10 @@ mixes with music.
   `normalizeConfig`, `buildSchedule` and `ui/fields.ts`. Bump the storage version for
   `last-config` and `presets`.
 - **Different sound for a cue:** add it to `SOUND_LIBRARY` in `sounds.ts`, try it out in the
-  sound lab (`tools/sound-lab/`), then set its id in `APP_SOUNDS`.
-- **New cue:** add a `Cue`, add its sounds to `SOUND_LIBRARY` and `APP_SOUNDS`, then emit it
+  sound lab (`tools/sound-lab/`), then use its id in a set in `SOUND_SETS`.
+- **New sound set:** add an entry to `SOUND_SETS` and its id to `SoundSetId`. Settings
+  and the sound lab list it automatically.
+- **New cue:** add a `Cue`, add its sounds to `SOUND_LIBRARY` and to every set in `SOUND_SETS`, then emit it
   from `cuesBetween`.
 - **New screen:** add a folder under `features/` and a case to the `Screen` union in
   `App.tsx`.

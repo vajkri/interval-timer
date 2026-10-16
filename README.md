@@ -20,6 +20,8 @@ exercises, rounds and round reset, press play, and follow the colours and beeps.
 - **The screen stays on** while a workout runs (Screen Wake Lock API).
 - **Pause, skip and end:** End only appears while paused, so you can't stop a workout by
   accident.
+- **Two sound sets** you choose between in Settings: **Bells** (soft bells and chimes, the
+  default) and **Beeps** (sharp electronic beeps that are easier to hear over music).
 - **Presets:** save, load and delete timer setups. Tabata, EMOM 10 and HIIT 40/20 are included.
 - **Completion screen** with a summary, Repeat, and Save as preset.
 - **Works offline** once installed. Everything is stored on the device; there's no backend,
@@ -59,9 +61,9 @@ pnpm preview      # serve the production build
 
 Try out the cue sounds at `pnpm sound-lab`, or on your phone at
 https://vajkri.github.io/interval-timer/tools/sound-lab/. Each cue has several options,
-the one the app uses is marked **In app**, and **Play sequence** plays your picks in
+each one is labelled with the sound set that uses it, and **Play sequence** plays your picks in
 workout order. All sounds live in `src/services/audio/sounds.ts`. To change what the app
-plays, edit `APP_SOUNDS` in `src/services/audio/tones.ts`.
+plays, edit `SOUND_SETS` in `src/services/audio/soundSets.ts`.
 
 To test on your phone during development, run `pnpm dev --host` and open the network URL.
 Wake Lock and installing need HTTPS, so use the deployed site to test those.

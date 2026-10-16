@@ -24,6 +24,7 @@ export function createFakeServices() {
       unlock: () => Promise.resolve(),
       play: (cue) => played.push(cue),
       setPlayInSilentMode: vi.fn(),
+      setSoundSet: vi.fn(),
     },
     wakeLock: {
       supported: true,

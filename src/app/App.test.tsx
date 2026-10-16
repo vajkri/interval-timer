@@ -117,6 +117,22 @@ describe('App', () => {
     expect(services.repositories.settings.read().playInSilentMode).toBe(true)
 
     await user.click(screen.getByRole('button', { name: /Test sound/ }))
-    expect(played).toEqual(['work'])
+    expect(played).toEqual(['countdown', 'countdown', 'countdown', 'work', 'rest', 'done'])
+  })
+
+  it('switches to the Beeps sound set and previews it', async () => {
+    const { services, played } = createFakeServices()
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+    renderWithServices(<App />, services)
+    expect(services.beeper.setSoundSet).toHaveBeenLastCalledWith('bells')
+
+    await user.click(screen.getByRole('button', { name: 'Settings' }))
+    expect(screen.getByRole('radio', { name: /Bells/ })).toBeChecked()
+    await user.click(screen.getByRole('radio', { name: /Beeps/ }))
+
+    expect(screen.getByRole('radio', { name: /Beeps/ })).toBeChecked()
+    expect(services.beeper.setSoundSet).toHaveBeenLastCalledWith('beeps')
+    expect(services.repositories.settings.read().soundSet).toBe('beeps')
+    expect(played).toHaveLength(6)
   })
 })

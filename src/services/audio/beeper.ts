@@ -1,12 +1,14 @@
 import type { Cue } from '@/domain/timer'
 import { scheduleTones } from './synth'
-import { CUE_TONES } from './tones'
+import { DEFAULT_SOUND_SET, isSoundSetId, soundSetTones, type SoundSetId } from './soundSets'
 
 /** Plays cue sounds. Implementations must be safe to call at any time. */
 export interface Beeper {
   /** Must be called from a user gesture (tap) before sounds can play on iOS. */
   unlock(): Promise<void>
-  play(cue: Cue): void
+  /** Plays `cue`, optionally `delaySec` from now (used for previews). */
+  play(cue: Cue, delaySec?: number): void
+  setSoundSet(id: SoundSetId): void
   /**
    * iOS only: `true` plays cues through silent mode but pauses music from
    * other apps; `false` mixes with music but is muted in silent mode.
@@ -25,6 +27,7 @@ export interface Beeper {
 export function createWebAudioBeeper(win: Window & typeof globalThis = window): Beeper {
   let context: AudioContext | null = null
   let sessionType: AudioSessionType = 'ambient'
+  let tones = soundSetTones(DEFAULT_SOUND_SET)
 
   const applySessionType = () => {
     if (win.navigator.audioSession) win.navigator.audioSession.type = sessionType
@@ -42,6 +45,10 @@ export function createWebAudioBeeper(win: Window & typeof globalThis = window): 
   }
 
   return {
+    setSoundSet(id) {
+      // Never let a bad id (e.g. from old storage) break audio: use the default.
+      tones = soundSetTones(isSoundSetId(id) ? id : DEFAULT_SOUND_SET)
+    },
     setPlayInSilentMode(enabled) {
       sessionType = enabled ? 'playback' : 'ambient'
       applySessionType()
@@ -57,12 +64,12 @@ export function createWebAudioBeeper(win: Window & typeof globalThis = window): 
       silent.start()
       if (ctx.state !== 'running') await ctx.resume().catch(() => undefined)
     },
-    play(cue) {
+    play(cue, delaySec = 0) {
       const ctx = getContext()
       if (!ctx) return
       if (ctx.state !== 'running') void ctx.resume().catch(() => undefined)
-      const at = ctx.currentTime + 0.01
-      scheduleTones(ctx, ctx.destination, CUE_TONES[cue], at)
+      const at = ctx.currentTime + 0.01 + delaySec
+      scheduleTones(ctx, ctx.destination, tones[cue], at)
     },
   }
 }

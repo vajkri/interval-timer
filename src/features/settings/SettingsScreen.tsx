@@ -1,3 +1,4 @@
+import { SOUND_SETS } from '@/services/audio'
 import type { Settings } from '@/services/storage'
 import { Button } from '@/ui/Button'
 import { BackIcon, SoundIcon } from '@/ui/icons'
@@ -6,6 +7,7 @@ import styles from './SettingsScreen.module.css'
 interface Props {
   settings: Settings
   onChange: (patch: Partial<Settings>) => void
+  /** Plays a short preview of the selected sound set. */
   onTestSound: () => void
   onBack: () => void
 }
@@ -20,6 +22,35 @@ export function SettingsScreen({ settings, onChange, onTestSound, onBack }: Prop
         <h1 className={styles.title}>Settings</h1>
         <span className={styles.back} aria-hidden="true" />
       </header>
+
+      <section className={styles.card} aria-labelledby="sound-set-title">
+        <h2 id="sound-set-title" className={styles.label}>
+          Sounds
+        </h2>
+        <div className={styles.sets} role="radiogroup" aria-labelledby="sound-set-title">
+          {SOUND_SETS.map((set) => (
+            <label key={set.id} className={styles.set}>
+              <input
+                type="radio"
+                name="sound-set"
+                value={set.id}
+                className={styles.radio}
+                checked={settings.soundSet === set.id}
+                onChange={() => {
+                  onChange({ soundSet: set.id })
+                }}
+              />
+              <span className={styles.setText}>
+                <span className={styles.setName}>{set.name}</span>
+                <span className={styles.help}>{set.description}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+        <Button variant="secondary" className={styles.test} onClick={onTestSound}>
+          <SoundIcon /> Test sound
+        </Button>
+      </section>
 
       <section className={styles.card}>
         <label className={styles.row}>
@@ -44,10 +75,6 @@ export function SettingsScreen({ settings, onChange, onTestSound, onBack }: Prop
           workouts if you want music and beeps together.
         </p>
       </section>
-
-      <Button variant="secondary" className={styles.test} onClick={onTestSound}>
-        <SoundIcon /> Test sound
-      </Button>
     </main>
   )
 }

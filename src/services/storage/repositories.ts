@@ -1,5 +1,6 @@
 import { isPreset, type Preset } from '@/domain/presets'
 import { DEFAULT_CONFIG, isTimerConfig, normalizeConfig, type TimerConfig } from '@/domain/timer'
+import { DEFAULT_SOUND_SET, isSoundSetId, type SoundSetId } from '@/services/audio'
 import { browserStore, createSlot, type KeyValueStore } from './storage'
 
 export interface Settings {
@@ -9,9 +10,15 @@ export interface Settings {
    * from other apps, so it is off by default.
    */
   readonly playInSilentMode: boolean
+  /** Which set of cue sounds to play. */
+  readonly soundSet: SoundSetId
 }
 
-export const DEFAULT_SETTINGS: Settings = { muted: false, playInSilentMode: false }
+export const DEFAULT_SETTINGS: Settings = {
+  muted: false,
+  playInSilentMode: false,
+  soundSet: DEFAULT_SOUND_SET,
+}
 
 /** Accepts settings saved by older versions, which lack newer fields. */
 const isStoredSettings = (value: unknown): value is Partial<Settings> => {
@@ -19,7 +26,8 @@ const isStoredSettings = (value: unknown): value is Partial<Settings> => {
   const record = value as Record<string, unknown>
   return (
     typeof record.muted === 'boolean' &&
-    (record.playInSilentMode === undefined || typeof record.playInSilentMode === 'boolean')
+    (record.playInSilentMode === undefined || typeof record.playInSilentMode === 'boolean') &&
+    (record.soundSet === undefined || isSoundSetId(record.soundSet))
   )
 }
 

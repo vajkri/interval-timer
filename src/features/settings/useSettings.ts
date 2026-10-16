@@ -11,6 +11,10 @@ export function useSettings(): [Settings, (patch: Partial<Settings>) => void] {
     beeper.setPlayInSilentMode(settings.playInSilentMode)
   }, [beeper, settings.playInSilentMode])
 
+  useEffect(() => {
+    beeper.setSoundSet(settings.soundSet)
+  }, [beeper, settings.soundSet])
+
   const update = useCallback(
     (patch: Partial<Settings>) => {
       setSettings((current) => {

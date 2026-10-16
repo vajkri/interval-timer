@@ -64,6 +64,7 @@ describe('createRepositories', () => {
     expect(createRepositories(store).settings.read()).toEqual({
       muted: true,
       playInSilentMode: false,
+      soundSet: 'bells',
     })
   })
 })

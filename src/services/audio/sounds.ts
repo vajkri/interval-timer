@@ -23,8 +23,8 @@ const bellChord = (): Tone[] => [
 ]
 
 /**
- * Every available sound, per cue. The app picks one per cue in `tones.ts`;
- * the sound lab (`tools/sound-lab/`) lets you hear them all.
+ * Every available sound, per cue. Sound sets (`soundSets.ts`) pick one per
+ * cue; the sound lab (`tools/sound-lab/`) lets you hear them all.
  */
 export const SOUND_LIBRARY: Readonly<Record<Cue, readonly SoundOption[]>> = {
   countdown: [
@@ -134,6 +134,12 @@ export const SOUND_LIBRARY: Readonly<Record<Cue, readonly SoundOption[]>> = {
       description: 'One long, low ring',
       tones: bell(262, 0, 1.6, 0.7),
     },
+    {
+      id: 'beep-down',
+      name: 'Beep down',
+      description: 'Two falling square beeps',
+      tones: [note(1319, 0, 0.14, 'square', 0.3), note(880, 0.18, 0.3, 'square', 0.3)],
+    },
   ],
   done: [
     {
@@ -185,6 +191,15 @@ export const SOUND_LIBRARY: Readonly<Record<Cue, readonly SoundOption[]>> = {
           i === 6 ? { envelope: 'decay' } : {},
         ),
       ),
+    },
+    {
+      id: 'beep-finish',
+      name: 'Beep finish',
+      description: 'Sports-watch finish: three pips and a long beep',
+      tones: [
+        ...[0, 0.15, 0.3].map((t) => note(1760, t, 0.08, 'square', 0.25)),
+        note(1760, 0.5, 0.7, 'square', 0.25),
+      ],
     },
   ],
 }
