@@ -56,7 +56,10 @@ export default defineConfig({
     react(),
     contentSecurityPolicy(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // New versions activate as soon as they are downloaded (skipWaiting +
+      // clientsClaim below) but never force a reload, which could interrupt a
+      // running workout. The next launch picks up the new version.
+      registerType: 'prompt',
       injectRegister: false,
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
@@ -81,6 +84,8 @@ export default defineConfig({
         globIgnores: ['tools/**'],
         navigateFallbackDenylist: [/\/tools\//],
         cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
       },
     }),
   ],
