@@ -1,5 +1,5 @@
 import type { Cue } from '@/domain/timer'
-import { CUE_TONES, note, type Tone } from '@/services/audio'
+import { note, type Tone } from './synth'
 
 export interface SoundOption {
   readonly id: string
@@ -15,14 +15,24 @@ const bell = (frequency: number, startSec: number, durationSec: number, gain = 0
   note(frequency * 5.4, startSec, durationSec * 0.3, 'sine', gain * 0.15, { envelope: 'decay' }),
 ]
 
-/** Option 1 of each cue is always what the app plays today. */
-export const SOUND_OPTIONS: Readonly<Record<Cue, readonly SoundOption[]>> = {
+/** C major chord of bells. */
+const bellChord = (): Tone[] => [
+  ...bell(523, 0, 1.8, 0.35),
+  ...bell(659, 0.05, 1.8, 0.3),
+  ...bell(784, 0.1, 1.8, 0.3),
+]
+
+/**
+ * Every available sound, per cue. The app picks one per cue in `tones.ts`;
+ * the sound lab (`tools/sound-lab/`) lets you hear them all.
+ */
+export const SOUND_LIBRARY: Readonly<Record<Cue, readonly SoundOption[]>> = {
   countdown: [
     {
       id: 'blip',
-      name: 'Blip (current)',
+      name: 'Blip',
       description: 'Short, neutral sine beep',
-      tones: CUE_TONES.countdown,
+      tones: [note(880, 0, 0.12, 'sine', 0.5)],
     },
     {
       id: 'tick',
@@ -52,9 +62,9 @@ export const SOUND_OPTIONS: Readonly<Record<Cue, readonly SoundOption[]>> = {
   work: [
     {
       id: 'go-double',
-      name: 'Go double (current)',
+      name: 'Go double',
       description: 'Bright rising double beep',
-      tones: CUE_TONES.work,
+      tones: [note(988, 0, 0.14, 'square', 0.35), note(1319, 0.16, 0.32, 'square', 0.35)],
     },
     {
       id: 'boxing-bell',
@@ -86,13 +96,19 @@ export const SOUND_OPTIONS: Readonly<Record<Cue, readonly SoundOption[]>> = {
         note(f, 0, 0.55, 'sawtooth', 0.14, { envelope: 'decay' }),
       ),
     },
+    {
+      id: 'bell-chord',
+      name: 'Bell chord',
+      description: 'Warm, ringing chord',
+      tones: bellChord(),
+    },
   ],
   rest: [
     {
       id: 'fall-double',
-      name: 'Falling double (current)',
+      name: 'Falling double',
       description: 'Soft falling two-tone',
-      tones: CUE_TONES.rest,
+      tones: [note(784, 0, 0.22, 'triangle', 0.7), note(523, 0.24, 0.42, 'triangle', 0.7)],
     },
     {
       id: 'glide-down',
@@ -122,9 +138,11 @@ export const SOUND_OPTIONS: Readonly<Record<Cue, readonly SoundOption[]>> = {
   done: [
     {
       id: 'arpeggio',
-      name: 'Arpeggio (current)',
+      name: 'Arpeggio',
       description: 'Rising major arpeggio',
-      tones: CUE_TONES.done,
+      tones: [523, 659, 784, 1047].map((f, i) =>
+        note(f, i * 0.17, i === 3 ? 0.6 : 0.16, 'triangle', 0.7),
+      ),
     },
     {
       id: 'ta-da',

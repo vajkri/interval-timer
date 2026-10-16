@@ -1,6 +1,5 @@
 import type { Cue } from '@/domain/timer'
-import { scheduleTones } from '@/services/audio'
-import { SOUND_OPTIONS, type SoundOption } from './options'
+import { APP_SOUNDS, SOUND_LIBRARY, scheduleTones, type SoundOption } from '@/services/audio'
 
 const CUES: readonly { cue: Cue; label: string; hint: string }[] = [
   { cue: 'countdown', label: 'Countdown', hint: 'Plays at 3, 2 and 1 seconds before every change' },
@@ -9,7 +8,7 @@ const CUES: readonly { cue: Cue; label: string; hint: string }[] = [
   { cue: 'done', label: 'Workout done', hint: 'The finish line' },
 ]
 
-const STORAGE_KEY = 'interval-timer:sound-lab:v1'
+const STORAGE_KEY = 'interval-timer:sound-lab:v2'
 
 const $ = (selector: string): HTMLElement => {
   const el = document.querySelector<HTMLElement>(selector)
@@ -49,13 +48,9 @@ volume.addEventListener('input', () => {
 
 type Picks = Record<Cue, string>
 
+/** Picks start from what the app plays today. */
 function defaultPicks(): Picks {
-  return {
-    countdown: SOUND_OPTIONS.countdown[0]?.id ?? '',
-    work: SOUND_OPTIONS.work[0]?.id ?? '',
-    rest: SOUND_OPTIONS.rest[0]?.id ?? '',
-    done: SOUND_OPTIONS.done[0]?.id ?? '',
-  }
+  return { ...APP_SOUNDS }
 }
 
 function loadPicks(): Picks {
@@ -65,7 +60,7 @@ function loadPicks(): Picks {
     if (typeof stored === 'object' && stored !== null) {
       for (const { cue } of CUES) {
         const id = (stored as Record<string, unknown>)[cue]
-        if (typeof id === 'string' && SOUND_OPTIONS[cue].some((o) => o.id === id)) picks[cue] = id
+        if (typeof id === 'string' && SOUND_LIBRARY[cue].some((o) => o.id === id)) picks[cue] = id
       }
     }
   } catch {
@@ -77,7 +72,7 @@ function loadPicks(): Picks {
 const picks = loadPicks()
 
 const picked = (cue: Cue): SoundOption | undefined =>
-  SOUND_OPTIONS[cue].find((o) => o.id === picks[cue]) ?? SOUND_OPTIONS[cue][0]
+  SOUND_LIBRARY[cue].find((o) => o.id === picks[cue]) ?? SOUND_LIBRARY[cue][0]
 
 function renderChoice() {
   const lines = CUES.map(({ cue }) => `${cue}: ${picks[cue]}  (${picked(cue)?.name ?? '?'})`)
@@ -102,7 +97,7 @@ function render() {
     list.setAttribute('role', 'radiogroup')
     list.setAttribute('aria-label', label)
 
-    for (const [i, option] of SOUND_OPTIONS[cue].entries()) {
+    for (const [i, option] of SOUND_LIBRARY[cue].entries()) {
       const button = document.createElement('button')
       button.type = 'button'
       button.className = 'option'
@@ -118,6 +113,12 @@ function render() {
       const desc = document.createElement('span')
       desc.className = 'desc'
       desc.textContent = option.description
+      if (APP_SOUNDS[cue] === option.id) {
+        const badge = document.createElement('span')
+        badge.className = 'badge'
+        badge.textContent = 'In app'
+        name.append(' ', badge)
+      }
       button.append(num, name, desc)
       button.addEventListener('click', () => {
         picks[cue] = option.id
