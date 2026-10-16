@@ -1,0 +1,123 @@
+:root {
+  color-scheme: dark;
+
+  /* Phase colours. Work is bright with dark text and rest is deep with light
+     text, so the two read differently from across a room and for people
+     with red/green colour blindness (luminance differs, not just hue). */
+  --work: #3ddc84;
+  --on-work: #052e16;
+  --rest: #b3123a;
+  --on-rest: #ffffff;
+  --roundReset: #ffb52e;
+  --on-roundReset: #2d1b00;
+  --prepare: #4f5bd5;
+  --on-prepare: #ffffff;
+  --exercises: #8b919c;
+  --on-exercises: #ffffff;
+  --rounds: #2f80ed;
+  --on-rounds: #ffffff;
+
+  --accent: #f0365a;
+  --accent-2: #ff6a3d;
+  --bg: #111318;
+  --surface: #1b1e25;
+  --surface-2: #262a33;
+  --text: #f4f5f7;
+  --text-muted: #9aa0ab;
+
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Text', system-ui, 'Segoe UI',
+    Roboto, sans-serif;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Tone classes shared by setup rows, pickers and the run screen. */
+.tone-prepare {
+  --tone: var(--prepare);
+  --on-tone: var(--on-prepare);
+}
+.tone-work {
+  --tone: var(--work);
+  --on-tone: var(--on-work);
+}
+.tone-rest {
+  --tone: var(--rest);
+  --on-tone: var(--on-rest);
+}
+.tone-roundReset {
+  --tone: var(--roundReset);
+  --on-tone: var(--on-roundReset);
+}
+.tone-exercises {
+  --tone: var(--exercises);
+  --on-tone: var(--on-exercises);
+}
+.tone-rounds {
+  --tone: var(--rounds);
+  --on-tone: var(--on-rounds);
+}

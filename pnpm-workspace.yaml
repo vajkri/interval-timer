@@ -1,0 +1,6 @@
+# Supply-chain hardening: only install package versions that have been
+# published for at least 3 days (value is in minutes).
+minimumReleaseAge: 4320
+# Never run dependency install scripts unless explicitly allowed below.
+strictDepBuilds: true
+onlyBuiltDependencies: []

@@ -1,0 +1,14 @@
+/** Formats milliseconds as `MM:SS` (or `H:MM:SS`), rounding up partial seconds. */
+export function formatClock(ms: number): string {
+  const totalSec = Math.max(0, Math.ceil(ms / 1000))
+  const h = Math.floor(totalSec / 3600)
+  const m = Math.floor((totalSec % 3600) / 60)
+  const s = totalSec % 60
+  const mm = String(m).padStart(2, '0')
+  const ss = String(s).padStart(2, '0')
+  return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`
+}
+
+export function formatSeconds(seconds: number): string {
+  return formatClock(seconds * 1000)
+}

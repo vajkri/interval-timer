@@ -1,0 +1,33 @@
+.ring {
+  position: relative;
+  width: min(78vw, 46vh, 22rem);
+  aspect-ratio: 1;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+}
+
+.track,
+.bar {
+  fill: none;
+  stroke: currentColor;
+}
+
+.track {
+  opacity: 0.2;
+}
+
+.bar {
+  stroke-linecap: round;
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+}

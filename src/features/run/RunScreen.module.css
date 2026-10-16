@@ -1,0 +1,93 @@
+.screen {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: calc(var(--safe-top) + 1rem) 1.25rem calc(var(--safe-bottom) + 1.25rem);
+  background: var(--tone);
+  color: var(--on-tone);
+  /* No transition: the colour flips instantly so a phase change is obvious. */
+}
+
+.header {
+  width: 100%;
+  text-align: center;
+}
+
+/* Large enough to read from across the room. */
+.phase {
+  font-size: clamp(2.75rem, 15vw, 5rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.counters {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 0.75rem 0 0;
+}
+
+.counters div {
+  display: flex;
+  gap: 0.4rem;
+  align-items: baseline;
+}
+
+.counters dt {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.counters dd {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.clock {
+  font-size: clamp(4rem, 20vw, 6.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.next {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.footer {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.small {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.main {
+  width: 5.5rem;
+  height: 5.5rem;
+  background: var(--on-tone);
+  color: var(--tone);
+}
+
+.remaining {
+  font-size: 1rem;
+  opacity: 0.9;
+}

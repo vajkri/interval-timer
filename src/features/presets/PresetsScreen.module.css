@@ -1,0 +1,121 @@
+.screen {
+  min-height: 100%;
+  padding: 0 1rem calc(var(--safe-bottom) + 1rem);
+  background: var(--bg);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: calc(var(--safe-top) + 0.5rem);
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.back {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.save {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  min-height: 3.25rem;
+  padding: 0 1rem;
+  border: 2px solid var(--surface-2);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.item {
+  display: flex;
+  align-items: stretch;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.select {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'name total'
+    'meta total';
+  gap: 0.15rem 0.75rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.select:active {
+  background: var(--surface-2);
+}
+
+.name {
+  grid-area: name;
+  font-weight: 700;
+}
+
+.meta {
+  grid-area: meta;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.total {
+  grid-area: total;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.delete {
+  border-radius: 0;
+  min-height: auto;
+}
+
+.empty {
+  margin-top: 2rem;
+  color: var(--text-muted);
+  text-align: center;
+}

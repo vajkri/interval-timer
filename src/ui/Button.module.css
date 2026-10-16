@@ -1,0 +1,52 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3.25rem;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: var(--radius-lg);
+  font: inherit;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    opacity 120ms ease;
+}
+
+.button:active {
+  transform: scale(0.96);
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.secondary {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.ghost {
+  background: transparent;
+  color: inherit;
+  min-height: 2.75rem;
+  padding: 0 0.75rem;
+}
+
+.round {
+  width: 4.5rem;
+  height: 4.5rem;
+  padding: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.22);
+  color: inherit;
+}
