@@ -101,4 +101,22 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: 'Presets' }))
     expect(screen.getByText('Quick one')).toBeInTheDocument()
   })
+
+  it('switches the audio mode from settings and remembers it', async () => {
+    const { services, played } = createFakeServices()
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+    renderWithServices(<App />, services)
+    expect(services.beeper.setPlayInSilentMode).toHaveBeenLastCalledWith(false)
+
+    await user.click(screen.getByRole('button', { name: 'Settings' }))
+    const toggle = screen.getByRole('switch', { name: 'Play sounds in silent mode' })
+    expect(toggle).not.toBeChecked()
+    await user.click(toggle)
+    expect(toggle).toBeChecked()
+    expect(services.beeper.setPlayInSilentMode).toHaveBeenLastCalledWith(true)
+    expect(services.repositories.settings.read().playInSilentMode).toBe(true)
+
+    await user.click(screen.getByRole('button', { name: /Test sound/ }))
+    expect(played).toEqual(['work'])
+  })
 })

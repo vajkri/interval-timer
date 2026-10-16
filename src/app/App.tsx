@@ -3,6 +3,8 @@ import { CompleteScreen } from '@/features/complete/CompleteScreen'
 import { PresetsScreen } from '@/features/presets/PresetsScreen'
 import { usePresets } from '@/features/presets/usePresets'
 import { RunScreen } from '@/features/run/RunScreen'
+import { SettingsScreen } from '@/features/settings/SettingsScreen'
+import { useSettings } from '@/features/settings/useSettings'
 import { SetupScreen } from '@/features/setup/SetupScreen'
 import { useTimerConfig } from '@/features/setup/useTimerConfig'
 import type { TimerConfig } from '@/domain/timer'
@@ -11,6 +13,7 @@ import { useServices } from './services'
 type Screen =
   | { readonly name: 'setup' }
   | { readonly name: 'presets' }
+  | { readonly name: 'settings' }
   | { readonly name: 'run'; readonly config: TimerConfig }
   | { readonly name: 'complete'; readonly config: TimerConfig }
 
@@ -19,6 +22,7 @@ export function App() {
   const [screen, setScreen] = useState<Screen>({ name: 'setup' })
   const [config, setConfig] = useTimerConfig()
   const presets = usePresets()
+  const [settings, updateSettings] = useSettings()
 
   const startWorkout = (workout: TimerConfig) => {
     // Must run synchronously inside the tap handler for iOS to allow audio.
@@ -38,6 +42,9 @@ export function App() {
           onOpenPresets={() => {
             setScreen({ name: 'presets' })
           }}
+          onOpenSettings={() => {
+            setScreen({ name: 'settings' })
+          }}
         />
       )
     case 'presets':
@@ -54,10 +61,28 @@ export function App() {
           }}
         />
       )
+    case 'settings':
+      return (
+        <SettingsScreen
+          settings={settings}
+          onChange={updateSettings}
+          onTestSound={() => {
+            void beeper.unlock()
+            beeper.play('work')
+          }}
+          onBack={() => {
+            setScreen({ name: 'setup' })
+          }}
+        />
+      )
     case 'run':
       return (
         <RunScreen
           config={screen.config}
+          muted={settings.muted}
+          onToggleMuted={() => {
+            updateSettings({ muted: !settings.muted })
+          }}
           onExit={() => {
             setScreen({ name: 'setup' })
           }}

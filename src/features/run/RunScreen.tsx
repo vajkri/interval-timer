@@ -3,7 +3,6 @@ import { Button } from '@/ui/Button'
 import { PHASE_LABEL } from '@/ui/fields'
 import { MuteIcon, PauseIcon, PlayIcon, SkipIcon, SoundIcon, StopIcon } from '@/ui/icons'
 import { ProgressRing } from './ProgressRing'
-import { useMuted } from './useMuted'
 import { useWorkoutRunner } from './useWorkoutRunner'
 import styles from './RunScreen.module.css'
 
@@ -11,10 +10,11 @@ interface Props {
   config: TimerConfig
   onExit: () => void
   onFinish: () => void
+  muted: boolean
+  onToggleMuted: () => void
 }
 
-export function RunScreen({ config, onExit, onFinish }: Props) {
-  const [muted, toggleMuted] = useMuted()
+export function RunScreen({ config, onExit, onFinish, muted, onToggleMuted }: Props) {
   const runner = useWorkoutRunner(config, { muted, onFinish })
   const { position, status } = runner
   const paused = status === 'paused'
@@ -68,7 +68,7 @@ export function RunScreen({ config, onExit, onFinish }: Props) {
           <Button
             variant="round"
             className={styles.small}
-            onClick={toggleMuted}
+            onClick={onToggleMuted}
             aria-label={muted ? 'Unmute' : 'Mute'}
             aria-pressed={muted}
           >

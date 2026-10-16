@@ -34,8 +34,11 @@ exercises, rounds and round reset, press play, and follow the colours and beeps.
 Notes for iOS:
 
 - Keeping the screen on needs iOS 16.4+ in Safari, or iOS 18.4+ for the home-screen app.
-- The beeps follow the **silent switch**, like any sound that mixes with music. If you hear
-  nothing, check that the phone isn't in silent mode.
+- **Silent mode vs. music:** by default the beeps mix with your music (Spotify keeps
+  playing), but iOS mutes them in silent mode. In **Settings → Play sounds in silent mode**
+  you can make them play through silent mode, but then iOS pauses other apps' music when a
+  sound plays. WebKit gives web apps no option that does both (see
+  `src/services/audio/beeper.ts`). Use **Test sound** in Settings to check.
 - Web apps can't play sound while the phone is locked or another app is in front. The timer
   keeps the correct time, but cues are skipped until you come back. The screen stays on while
   the app is open, so normally this doesn't come up.

@@ -7,14 +7,28 @@ export interface Beeper {
   /** Must be called from a user gesture (tap) before sounds can play on iOS. */
   unlock(): Promise<void>
   play(cue: Cue): void
+  /**
+   * iOS only: `true` plays cues through silent mode but pauses music from
+   * other apps; `false` mixes with music but is muted in silent mode.
+   */
+  setPlayInSilentMode(enabled: boolean): void
 }
 
 /**
- * Web Audio beeper. Sounds are synthesized (no audio files to load) and are
- * mixed with whatever else is playing, so music apps keep going.
+ * Web Audio beeper. Sounds are synthesized, so there are no audio files to load.
+ *
+ * On iOS the Audio Session type decides how cues behave (see WebKit's
+ * DOMAudioSession.cpp and AudioSessionIOS.mm): "ambient" mixes with music
+ * but is muted by the silent switch, and "playback" ignores the switch but
+ * interrupts other apps. WebKit has no option that does both.
  */
 export function createWebAudioBeeper(win: Window & typeof globalThis = window): Beeper {
   let context: AudioContext | null = null
+  let sessionType: AudioSessionType = 'ambient'
+
+  const applySessionType = () => {
+    if (win.navigator.audioSession) win.navigator.audioSession.type = sessionType
+  }
 
   const getContext = (): AudioContext | null => {
     if (context) return context
@@ -22,13 +36,16 @@ export function createWebAudioBeeper(win: Window & typeof globalThis = window): 
     const Ctor =
       (win as { AudioContext?: typeof AudioContext }).AudioContext ?? win.webkitAudioContext
     if (!Ctor) return null
-    // "ambient" mixes with other audio (e.g. Spotify) instead of pausing it.
-    if (win.navigator.audioSession) win.navigator.audioSession.type = 'ambient'
+    applySessionType()
     context = new Ctor({ latencyHint: 'interactive' })
     return context
   }
 
   return {
+    setPlayInSilentMode(enabled) {
+      sessionType = enabled ? 'playback' : 'ambient'
+      applySessionType()
+    },
     async unlock() {
       const ctx = getContext()
       if (!ctx) return
@@ -48,10 +65,4 @@ export function createWebAudioBeeper(win: Window & typeof globalThis = window): 
       scheduleTones(ctx, ctx.destination, CUE_TONES[cue], at)
     },
   }
-}
-
-/** A beeper that does nothing; used when muted and in tests. */
-export const silentBeeper: Beeper = {
-  unlock: () => Promise.resolve(),
-  play: () => undefined,
 }

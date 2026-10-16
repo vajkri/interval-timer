@@ -21,10 +21,18 @@ const $ = (selector: string): HTMLElement => {
 let ctx: AudioContext | null = null
 let master: GainNode | null = null
 const volume = $('#volume') as HTMLInputElement
+const silentMode = $('#silent') as HTMLInputElement
+
+// Same trade-off as the app setting: see services/audio/beeper.ts.
+const applySessionType = () => {
+  if (navigator.audioSession)
+    navigator.audioSession.type = silentMode.checked ? 'playback' : 'ambient'
+}
+silentMode.addEventListener('change', applySessionType)
 
 function audio(): { ctx: AudioContext; out: GainNode } {
   if (!ctx || !master) {
-    if (navigator.audioSession) navigator.audioSession.type = 'ambient'
+    applySessionType()
     ctx = new AudioContext({ latencyHint: 'interactive' })
     master = ctx.createGain()
     master.connect(ctx.destination)

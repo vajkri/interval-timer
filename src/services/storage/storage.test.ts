@@ -57,4 +57,13 @@ describe('createRepositories', () => {
     repos.lastConfig.write({ ...DEFAULT_CONFIG, rounds: 999 })
     expect(repos.lastConfig.read().rounds).toBe(100)
   })
+
+  it('reads settings saved before playInSilentMode existed', () => {
+    const store = memoryStore()
+    store.setItem('interval-timer:settings:v1', JSON.stringify({ muted: true }))
+    expect(createRepositories(store).settings.read()).toEqual({
+      muted: true,
+      playInSilentMode: false,
+    })
+  })
 })

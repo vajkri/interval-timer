@@ -23,6 +23,7 @@ export function createFakeServices() {
     beeper: {
       unlock: () => Promise.resolve(),
       play: (cue) => played.push(cue),
+      setPlayInSilentMode: vi.fn(),
     },
     wakeLock: {
       supported: true,

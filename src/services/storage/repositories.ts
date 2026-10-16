@@ -4,12 +4,24 @@ import { browserStore, createSlot, type KeyValueStore } from './storage'
 
 export interface Settings {
   readonly muted: boolean
+  /**
+   * Play cues even when the iPhone is in silent mode. On iOS this pauses music
+   * from other apps, so it is off by default.
+   */
+  readonly playInSilentMode: boolean
 }
 
-const isSettings = (value: unknown): value is Settings =>
-  typeof value === 'object' &&
-  value !== null &&
-  typeof (value as Record<string, unknown>).muted === 'boolean'
+export const DEFAULT_SETTINGS: Settings = { muted: false, playInSilentMode: false }
+
+/** Accepts settings saved by older versions, which lack newer fields. */
+const isStoredSettings = (value: unknown): value is Partial<Settings> => {
+  if (typeof value !== 'object' || value === null) return false
+  const record = value as Record<string, unknown>
+  return (
+    typeof record.muted === 'boolean' &&
+    (record.playInSilentMode === undefined || typeof record.playInSilentMode === 'boolean')
+  )
+}
 
 const isPresetList = (value: unknown): value is Preset[] =>
   Array.isArray(value) && value.every(isPreset)
@@ -21,6 +33,12 @@ export function createRepositories(store: KeyValueStore | undefined = browserSto
     version: 1,
     fallback: DEFAULT_CONFIG,
     validate: isTimerConfig,
+  })
+  const settings = createSlot<Partial<Settings>>(store, {
+    key: 'settings',
+    version: 1,
+    fallback: DEFAULT_SETTINGS,
+    validate: isStoredSettings,
   })
   return {
     lastConfig: {
@@ -36,12 +54,12 @@ export function createRepositories(store: KeyValueStore | undefined = browserSto
       fallback: null,
       validate: (v): v is Preset[] | null => v === null || isPresetList(v),
     }),
-    settings: createSlot<Settings>(store, {
-      key: 'settings',
-      version: 1,
-      fallback: { muted: false },
-      validate: isSettings,
-    }),
+    settings: {
+      read: (): Settings => ({ ...DEFAULT_SETTINGS, ...settings.read() }),
+      write: (value: Settings) => {
+        settings.write(value)
+      },
+    },
   }
 }
 

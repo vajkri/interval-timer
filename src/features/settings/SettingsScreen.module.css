@@ -1,0 +1,97 @@
+.screen {
+  min-height: 100%;
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 0 1rem calc(var(--safe-bottom) + 1rem);
+  background: var(--bg);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: calc(var(--safe-top) + 0.5rem);
+}
+
+.title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.back {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.card {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.help {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* iOS-style switch built on a native checkbox, so it stays accessible. */
+.switch {
+  appearance: none;
+  flex: none;
+  position: relative;
+  width: 3.25rem;
+  height: 2rem;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 150ms ease;
+}
+
+.switch:checked {
+  background: var(--work);
+}
+
+.switch:checked::after {
+  transform: translateX(1.25rem);
+}
+
+.test {
+  justify-self: start;
+}

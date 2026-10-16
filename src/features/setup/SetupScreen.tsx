@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { formatSeconds, workoutSeconds, type TimerConfig, type TimerField } from '@/domain/timer'
 import { FIELD_META, FIELD_ORDER } from '@/ui/fields'
-import { ListIcon, PlayIcon } from '@/ui/icons'
+import { ListIcon, PlayIcon, SettingsIcon } from '@/ui/icons'
 import { formatFieldValue } from './formatFieldValue'
 import { ValuePicker } from './ValuePicker'
 import styles from './SetupScreen.module.css'
@@ -11,9 +11,10 @@ interface Props {
   onChange: (config: TimerConfig) => void
   onStart: () => void
   onOpenPresets: () => void
+  onOpenSettings: () => void
 }
 
-export function SetupScreen({ config, onChange, onStart, onOpenPresets }: Props) {
+export function SetupScreen({ config, onChange, onStart, onOpenPresets, onOpenSettings }: Props) {
   const [editing, setEditing] = useState<TimerField | null>(null)
 
   return (
@@ -29,7 +30,14 @@ export function SetupScreen({ config, onChange, onStart, onOpenPresets }: Props)
             <ListIcon />
           </button>
           <h1 className={styles.title}>Interval Timer</h1>
-          <span className={styles.iconButton} aria-hidden="true" />
+          <button
+            type="button"
+            className={styles.iconButton}
+            onClick={onOpenSettings}
+            aria-label="Settings"
+          >
+            <SettingsIcon />
+          </button>
         </div>
         <p className={styles.total} aria-label="Total workout time">
           {formatSeconds(workoutSeconds(config))}
