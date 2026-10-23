@@ -23,8 +23,8 @@
     "sound-lab": "vite --open /interval-timer/tools/sound-lab/"
   },
   "dependencies": {
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "workbox-window": "^7.4.1"
   },
   "devDependencies": {
